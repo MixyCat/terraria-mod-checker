@@ -1,6 +1,12 @@
 import os
 import json
 import subprocess
+import sys
+
+
+def exit_wait(status_code: int):
+    input("Press Enter to exit...")
+    sys.exit(status_code)
 
 
 def get_tModLoader_path():
@@ -29,12 +35,12 @@ def main():
     tModLoader_path = get_tModLoader_path()
     if not tModLoader_path:
         print("tModLoader is not installed!")
-        return
+        exit_wait(1)
 
     enabled_mods_json = os.path.join(tModLoader_path, "enabled.json")
     if not os.path.exists(enabled_mods_json):
         print("Current enabled.json folder does not exist!")
-        return
+        exit_wait(1)
 
     print("Welcome! This program checks to see if your currently enabled tModLoader mods are "
           "different from a given modpack.")
@@ -82,7 +88,6 @@ def main():
                 for mod in extra_mods:
                     f.write("+ " + mod + "\n")
 
-    print(os.path.dirname(__file__))
     subprocess.Popen(["notepad.exe", "results.txt"])
 
 
