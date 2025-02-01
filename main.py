@@ -41,10 +41,12 @@ def main():
 
     # Get modpack folder path from input.
     modpack_path, modpack_name = "", ""
-    while not os.path.exists(modpack_path):
+    while not modpack_name or not os.path.isdir(modpack_path):
         modpack_name = input("Enter modpack name: ")
         modpack_path = os.path.join(tModLoader_path, "ModPacks", modpack_name)
-        if not os.path.exists(modpack_path) or not os.path.isdir(modpack_path):
+        if not modpack_name:
+            print("Please enter a modpack name.")
+        if not os.path.isdir(modpack_path):
             print("This modpack does not exist. Try again.")
     modpack_json = os.path.join(modpack_path, "Mods", "enabled.json")
 
@@ -70,13 +72,15 @@ def main():
         if not missing_mods and not extra_mods:
             f.write("There are no differences in mods being used.")
         else:
-            f.write(f"The following mods are missing from {modpack_name}:\n")
-            for mod in missing_mods:
-                f.write("- " + mod + "\n")
+            if missing_mods:
+                f.write(f"The following mods are missing from {modpack_name}:\n")
+                for mod in missing_mods:
+                    f.write("- " + mod + "\n")
 
-            f.write(f"\nThe following mods are not from {modpack_name}:\n")
-            for mod in extra_mods:
-                f.write("- " + mod + "\n")
+            if extra_mods:
+                f.write(f"\nThe following mods are not from {modpack_name}:\n")
+                for mod in extra_mods:
+                    f.write("+ " + mod + "\n")
 
     print(os.path.dirname(__file__))
     subprocess.Popen(["notepad.exe", "results.txt"])
