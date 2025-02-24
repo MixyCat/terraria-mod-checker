@@ -82,9 +82,10 @@ def main():
                 f.write(f"The following mods are missing from {modpack_name}:\n")
                 for mod in missing_mods:
                     f.write("- " + mod + "\n")
+                f.write("\n")
 
             if extra_mods:
-                f.write(f"\nThe following mods are not from {modpack_name}:\n")
+                f.write(f"The following mods are not from {modpack_name}:\n")
                 for mod in extra_mods:
                     f.write("+ " + mod + "\n")
 
