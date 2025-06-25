@@ -1,6 +1,5 @@
 import os
 import json
-import subprocess
 import sys
 
 
@@ -64,32 +63,25 @@ def main():
         modpack_mods = json.load(f)
 
     # Compare mods and see which extra mods are currently enabled and which are missing.
-    missing_mods, extra_mods = [], []
-    for mod in modpack_mods:
-        if mod not in enabled_mods:
-            missing_mods.append(mod)
+    missing_mods = [mod for mod in modpack_mods if mod not in enabled_mods]
+    extra_mods = [mod for mod in enabled_mods if mod not in modpack_mods]
 
-    for mod in enabled_mods:
-        if mod not in modpack_mods:
-            extra_mods.append(mod)
+    # Display results in the console.
+    if not missing_mods and not extra_mods:
+        print("There are no differences in mods being used.")
+    else:
+        if missing_mods:
+            print(f"The following mods are missing from {modpack_name}:")
+            for mod in missing_mods:
+                print("- " + mod)
+            print()
 
-    # Write results to results.txt
-    with open("results.txt", 'w') as f:
-        if not missing_mods and not extra_mods:
-            f.write("There are no differences in mods being used.")
-        else:
-            if missing_mods:
-                f.write(f"The following mods are missing from {modpack_name}:\n")
-                for mod in missing_mods:
-                    f.write("- " + mod + "\n")
-                f.write("\n")
-
-            if extra_mods:
-                f.write(f"The following mods are not from {modpack_name}:\n")
-                for mod in extra_mods:
-                    f.write("+ " + mod + "\n")
-
-    subprocess.Popen(["notepad.exe", "results.txt"])
+        if extra_mods:
+            print(f"The following mods are not from {modpack_name}:")
+            for mod in extra_mods:
+                print("+ " + mod)
+    
+    input("\nDone! Press Enter to exit.")
 
 
 if __name__ == '__main__':
